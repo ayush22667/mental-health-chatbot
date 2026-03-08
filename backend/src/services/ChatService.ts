@@ -33,7 +33,7 @@ export class ChatService {
     timestamp: number;
     chatDisabled?: boolean;
   }> {
-    const { sessionId, message, language, mode } = params;
+    const { sessionId, message, language } = params;
 
     // 1. Retrieve conversation history
     const history = await this.sessionService.getHistory(sessionId);
@@ -266,7 +266,7 @@ export class ChatService {
   /**
    * Get crisis resources
    */
-  private getCrisisResources(language: Language) {
+  private getCrisisResources(_language: Language) {
     return [
       {
         name: 'KIRAN Mental Health Helpline',

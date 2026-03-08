@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { JournalService } from '../services/JournalService';
-import { requireAuth, checkResourceAccess, AuthenticatedRequest } from '../middleware/auth';
-import { AppError } from '../middleware/errorHandler';
+import { requireAuth, AuthenticatedRequest } from '../middleware/auth';
+// import { AppError } from '../middleware/errorHandler';
 
 const router = Router();
 const journalService = new JournalService();

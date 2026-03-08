@@ -45,7 +45,7 @@ export class SessionService {
     const expiresAt = new Date(Date.now() + config.session.timeoutMinutes * 60 * 1000);
     const now = new Date();
 
-    const session: SessionData = {
+    const session = {
       sessionId,
       userId: params.userId,
       language: params.language,

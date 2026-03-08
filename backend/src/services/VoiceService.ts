@@ -9,7 +9,7 @@
 
 import {
   TranscribeStreamingClient,
-  StartStreamTranscriptionCommand,
+  // StartStreamTranscriptionCommand,
 } from '@aws-sdk/client-transcribe-streaming';
 import {
   PollyClient,
@@ -28,7 +28,7 @@ import { SafetyService } from './SafetyService';
 import { RiskLevel } from '../models';
 
 export class VoiceService {
-  private transcribeClient: TranscribeStreamingClient;
+  // private transcribeClient: TranscribeStreamingClient;
   private pollyClient: PollyClient;
   private bedrockClient: BedrockRuntimeClient;
   private safetyService: SafetyService;
@@ -36,7 +36,7 @@ export class VoiceService {
   constructor() {
     const region = process.env.AWS_BEDROCK_REGION || 'us-east-1';
     
-    this.transcribeClient = new TranscribeStreamingClient({ region });
+    // this.transcribeClient = new TranscribeStreamingClient({ region });
     this.pollyClient = new PollyClient({ region });
     this.bedrockClient = new BedrockRuntimeClient({ region });
     this.safetyService = new SafetyService();
@@ -105,7 +105,7 @@ export class VoiceService {
    */
   private async transcribeAudio(
     audioStream: AsyncIterable<Buffer>,
-    language: VoiceLanguageCode
+    _language: VoiceLanguageCode
   ): Promise<string> {
     // Collect audio chunks
     const audioChunks: Buffer[] = [];

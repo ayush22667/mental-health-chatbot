@@ -18,7 +18,7 @@ export interface AuthenticatedRequest extends Request {
  */
 export const optionalAuth = (
   req: AuthenticatedRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ) => {
   const authHeader = req.headers.authorization;
@@ -63,7 +63,7 @@ export const optionalAuth = (
  */
 export const requireAuth = (
   req: AuthenticatedRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ) => {
   const authHeader = req.headers.authorization;

@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import { config } from './config';
 import { errorHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/requestLogger';
-import { rateLimiter } from './middleware/rateLimiter';
+// import { rateLimiter } from './middleware/rateLimiter';
 import { initializeDatabase, checkDatabaseHealth } from './utils/db-init';
 
 // Import routes
@@ -20,23 +20,31 @@ import voiceRoutes from './routes/voice';
 const app: Express = express();
 
 // Enable WebSocket support
-const wsInstance = expressWs(app);
-const wsApp = wsInstance.app;
+expressWs(app);
 
 // Middleware
 app.use(helmet({
   contentSecurityPolicy: false, // Disable for development
 }));
+
+// CORS configuration - allow frontend origin from environment variable
+const allowedOrigins = [
+  'http://localhost:3001',
+  'http://localhost:3000',
+  config.server.corsOrigin, // From CORS_ORIGIN env variable
+].filter(Boolean); // Remove undefined values
+
 app.use(cors({
-  origin: ['http://localhost:3001', 'http://localhost:3000'],
+  origin: allowedOrigins,
   credentials: true,
 }));
+
 app.use(express.json());
 app.use(requestLogger);
 // app.use(rateLimiter); // Disabled for development
 
 // Health check endpoint
-app.get('/health', async (req: Request, res: Response) => {
+app.get('/health', async (_req: Request, res: Response) => {
   const dbHealthy = await checkDatabaseHealth();
   
   res.status(dbHealthy ? 200 : 503).json({
@@ -71,7 +79,7 @@ async function startServer() {
     app.listen(PORT, () => {
       console.log(`🚀 Mental Health Chat Assistant API running on port ${PORT}`);
       console.log(`📍 Environment: ${config.server.nodeEnv}`);
-      console.log(`🌍 CORS enabled for: http://localhost:3001`);
+      console.log(`🌍 CORS enabled for: ${allowedOrigins.join(', ')}`);
       console.log(`📡 Health check: http://localhost:${PORT}/health`);
     });
   } catch (error) {

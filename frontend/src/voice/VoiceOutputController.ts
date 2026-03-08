@@ -9,7 +9,7 @@ import { IVoiceOutputController } from './interfaces';
 
 export class VoiceOutputController implements IVoiceOutputController {
   private audioContext: AudioContext | null = null;
-  private audioQueue: AudioBuffer[] = [];
+  // private audioQueue: AudioBuffer[] = [];
   private currentSource: AudioBufferSourceNode | null = null;
   private state: 'idle' | 'playing' | 'paused' | 'stopped' = 'idle';
   private isPlaying = false;
@@ -112,7 +112,7 @@ export class VoiceOutputController implements IVoiceOutputController {
       this.currentSource = null;
     }
 
-    this.audioQueue = [];
+    // this.audioQueue = [];
     this.state = 'stopped';
   }
 

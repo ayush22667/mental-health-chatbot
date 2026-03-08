@@ -7,7 +7,7 @@ import React from 'react';
 
 interface MicIconProps {
   size?: number;
-  state?: 'idle' | 'listening' | 'processing' | 'error';
+  state?: 'idle' | 'listening' | 'processing' | 'speaking' | 'error';
 }
 
 export const MicIcon: React.FC<MicIconProps> = ({ size = 20, state = 'idle' }) => {

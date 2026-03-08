@@ -7,9 +7,9 @@
 
 import { Amplify } from 'aws-amplify';
 
-const COGNITO_USER_POOL_ID = import.meta.env.VITE_COGNITO_USER_POOL_ID || '';
-const COGNITO_CLIENT_ID = import.meta.env.VITE_COGNITO_CLIENT_ID || '';
-const AWS_REGION = import.meta.env.VITE_AWS_REGION || 'ap-south-1';
+const COGNITO_USER_POOL_ID = (import.meta as any).env.VITE_COGNITO_USER_POOL_ID || '';
+const COGNITO_CLIENT_ID = (import.meta as any).env.VITE_COGNITO_CLIENT_ID || '';
+const AWS_REGION = (import.meta as any).env.VITE_AWS_REGION || 'ap-south-1';
 
 export const isCognitoConfigured = !!(COGNITO_USER_POOL_ID && COGNITO_CLIENT_ID);
 
@@ -20,6 +20,7 @@ if (isCognitoConfigured) {
       Cognito: {
         userPoolId: COGNITO_USER_POOL_ID,
         userPoolClientId: COGNITO_CLIENT_ID,
+        identityPoolId: '',
         loginWith: {
           email: true,
         },

@@ -4,6 +4,8 @@
  * Handles Server-Sent Events for real-time chat response streaming
  */
 
+import { fetchAuthSession } from 'aws-amplify/auth';
+
 export interface StreamEvent {
   type: 'token' | 'metadata' | 'error' | 'done';
   data: any;
@@ -26,6 +28,30 @@ export class StreamingChatService {
   }
 
   /**
+   * Get authentication headers with Cognito JWT token
+   */
+  private async getAuthHeaders(): Promise<HeadersInit> {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      // Get current auth session from Cognito
+      const session = await fetchAuthSession();
+      const token = session.tokens?.idToken?.toString();
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+    } catch (error) {
+      // User not authenticated - backend will treat as anonymous
+      console.log('No auth token available, using anonymous access');
+    }
+
+    return headers;
+  }
+
+  /**
    * Send a message and start streaming the response
    */
   async sendMessageStreaming(
@@ -36,11 +62,11 @@ export class StreamingChatService {
   ): Promise<string> {
     try {
       // 1. Initiate streaming chat
+      const headers = await this.getAuthHeaders();
+      
       const response = await fetch(`${this.baseUrl}/api/stream/chat`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({
           sessionId,
           message,
@@ -132,7 +158,7 @@ export class StreamingChatService {
    * Close all active streams
    */
   closeAllStreams(): void {
-    for (const [rayId, eventSource] of this.activeStreams.entries()) {
+    for (const [, eventSource] of this.activeStreams.entries()) {
       eventSource.close();
     }
     this.activeStreams.clear();

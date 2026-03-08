@@ -108,7 +108,7 @@ router.get('/subscribe/:rayId', (req: Request, res: Response) => {
  * 
  * Health check for streaming service
  */
-router.get('/health', (req: Request, res: Response) => {
+router.get('/health', (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
     activeStreams: streamingService.getActiveStreamCount(),

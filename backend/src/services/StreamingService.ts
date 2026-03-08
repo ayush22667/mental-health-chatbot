@@ -45,7 +45,7 @@ export class StreamingService {
   /**
    * Send an event to a specific stream
    */
-  sendEvent(rayId: string, res: Response, event: StreamEvent): void {
+  sendEvent(_rayId: string, res: Response, event: StreamEvent): void {
     const data = JSON.stringify(event);
     res.write(`data: ${data}\n\n`);
   }

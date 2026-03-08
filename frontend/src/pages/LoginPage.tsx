@@ -10,7 +10,7 @@ import { LeafIcon } from '../components/icons/LeafIcon';
 import { signIn, signUp, confirmSignUp } from 'aws-amplify/auth';
 import { isCognitoConfigured } from '../config/amplify';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = (import.meta as any).env.VITE_API_URL || 'http://localhost:3000';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export const LoginPage: React.FC = () => {
 
   const handleCognitoSignUp = async () => {
     try {
-      const { isSignUpComplete, userId, nextStep } = await signUp({
+      const { isSignUpComplete, nextStep } = await signUp({
         username: email,
         password: password,
         options: {
@@ -59,7 +59,7 @@ export const LoginPage: React.FC = () => {
 
   const handleCognitoSignIn = async () => {
     try {
-      const { isSignedIn, nextStep } = await signIn({
+      const { isSignedIn } = await signIn({
         username: email,
         password: password,
       });
