@@ -6,6 +6,8 @@
 
 import { fetchAuthSession } from 'aws-amplify/auth';
 
+const API_BASE_URL = (import.meta as any).env.VITE_API_URL || 'http://localhost:3000';
+
 export interface StreamEvent {
   type: 'token' | 'metadata' | 'error' | 'done';
   data: any;
@@ -23,7 +25,7 @@ export class StreamingChatService {
   private baseUrl: string;
   private activeStreams: Map<string, EventSource> = new Map();
 
-  constructor(baseUrl: string = 'http://localhost:3000') {
+  constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl;
   }
 
