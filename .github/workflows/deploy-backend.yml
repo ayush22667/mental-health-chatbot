@@ -1,0 +1,94 @@
+name: Deploy Backend to AWS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: backend
+        run: npm ci
+      
+      - name: Run linter
+        working-directory: backend
+        run: npm run lint
+      
+      - name: Run tests
+        working-directory: backend
+        run: npm test
+
+  deploy:
+    name: Deploy to Elastic Beanstalk
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        working-directory: backend
+        run: npm ci
+      
+      - name: Build application
+        working-directory: backend
+        run: npm run build
+      
+      - name: Generate deployment package
+        working-directory: backend
+        run: |
+          zip -r deploy.zip . -x "*.git*" "node_modules/*" "logs/*" "*.log" ".env"
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: Deploy to Elastic Beanstalk
+        working-directory: backend
+        run: |
+          # Install EB CLI
+          pip install awsebcli
+          
+          # Deploy
+          eb deploy mental-health-chat-prod
+      
+      - name: Verify deployment
+        run: |
+          sleep 30
+          curl -f https://mental-health-chat-prod.us-east-1.elasticbeanstalk.com/health || exit 1
+      
+      - name: Notify on success
+        if: success()
+        run: echo "✅ Backend deployed successfully!"
+      
+      - name: Notify on failure
+        if: failure()
+        run: echo "❌ Backend deployment failed!"

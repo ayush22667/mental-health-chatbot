@@ -47,3 +47,35 @@ venv/
 # Misc
 *.tgz
 .cache/
+
+# Setup and deployment scripts (local use only)
+setup-cognito.sh
+add-cognito-permissions.sh
+setup-google-auth.sh
+deploy-docker-aws.sh
+restart-backend.sh
+create-aws-dynamodb-tables.sh
+backend/fix-opensearch-access.sh
+backend/index-rag.sh
+
+# Documentation and guides (local use only)
+COGNITO_SETUP_GUIDE.md
+GOOGLE_AUTH_SETUP.md
+GITHUB_CICD_SETUP.md
+DEPLOYMENT_QUICKSTART.md
+DOCKER_DEPLOYMENT.md
+AUTHENTICATION_CHANGES.md
+AWS_DYNAMODB_IAM_POLICY.md
+
+# Policy files
+dynamodb-policy.json
+cognito-policy.json
+opensearch-policy.json
+
+# Temporary files
+/tmp/
+*.tmp
+backend-user-data.sh
+
+
+.kiro
